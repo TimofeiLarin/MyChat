@@ -16,10 +16,6 @@ app.get('/rooms', (req, res) => {
   res.json(rooms);
 });
 
-io.on('connection', (socket) => {
-  console.log('socket connect', socket.id);
-});
-
 app.post('/rooms', (req, res) => {
   const { roomId, userName } = req.body;
   if (!rooms.has(roomId)) {
@@ -32,6 +28,16 @@ app.post('/rooms', (req, res) => {
     );
   }
   res.send();
+});
+
+io.on('connection', (socket) => {
+  socket.on('ROOM:JOIN', ({ roomId, userName }) => {
+    socket.join(roomId);
+    rooms.get(roomId).get('users').set(socket.id, userName);
+    const users = [...rooms.get(roomId).get('users').values()];
+    socket.broadcast.to(roomId).emit('ROOM:JOINED', users);
+  });
+  console.log('socket connect', socket.id);
 });
 
 server.listen(8888, (err) => {
