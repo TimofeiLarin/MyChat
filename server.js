@@ -8,7 +8,7 @@ const io = require('socket.io')(server, {
     origin: '*',
   },
 });
-
+ 
 app.use(express.static(path.join(__dirname, './build')));
 app.use(express.json());
 

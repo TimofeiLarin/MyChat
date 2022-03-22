@@ -7,25 +7,23 @@ function Chat({ users, messages, userName, roomId, onAddMessage }) {
 
   const onSendMessage = () => {
     if (messageValue) {
-    socket.emit('ROOM:NEW_MESSAGE', {
-      userName,
-      roomId,
-      text: messageValue,
-    });
-    onAddMessage({ userName, text: messageValue });
-    setMessageValue('');
-  } else {
-    alert('Enter message');
-  }
+      socket.emit('ROOM:NEW_MESSAGE', {
+        userName,
+        roomId,
+        text: messageValue,
+      });
+      onAddMessage({ userName, text: messageValue });
+      setMessageValue('');
+    }
   };
 
   React.useEffect(() => {
-    messagesRef.current.scrollTo(0, messagesRef.current.scrollHeight);;
+    messagesRef.current.scrollTo(0, messagesRef.current.scrollHeight);
   }, [messages]);
-
+  console.log(messages)
   return (
-    <div className="chat">
-      <div className="chat-users">
+    <div className='chat'>
+      <div className='chat-users'>
         Room: <b>{roomId}</b>
         <hr />
         <b>Online ({users.length}):</b>
@@ -35,10 +33,10 @@ function Chat({ users, messages, userName, roomId, onAddMessage }) {
           ))}
         </ul>
       </div>
-      <div className="chat-messages">
-        <div ref={messagesRef} className="messages">
+      <div className='chat-messages'>
+        <div ref={messagesRef} className='messages'>
           {messages.map((message, id) => (
-            <div key={message + id}className="message">
+            <div key={message + id} className={message.userName === userName ? 'my-message' : 'message'}>
               <p>{message.text}</p>
               <div>
                 <span>{message.userName}</span>
@@ -50,9 +48,10 @@ function Chat({ users, messages, userName, roomId, onAddMessage }) {
           <textarea
             value={messageValue}
             onChange={(e) => setMessageValue(e.target.value)}
-            className="form-control"
-            rows="3"></textarea>
-          <button onClick={onSendMessage}  type="button" className="btn btn-primary">
+            className='form-control'
+            rows='3'
+          ></textarea>
+          <button onClick={onSendMessage} type='button' className='btn btn-primary'>
             Send
           </button>
         </form>
