@@ -9,7 +9,7 @@ const io = require('socket.io')(server, {
   },
 });
 
-
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(express.json());
 
 const rooms = new Map();
